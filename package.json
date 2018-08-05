@@ -1,0 +1,23 @@
+{
+  "name": "serverless-package-external",
+  "version": "1.0.0",
+  "description": "Add external folders to the deploy package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/epsagon/serverless-package-external.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/epsagon/serverless-package-external/issues"
+  },
+  "homepage": "https://github.com/epsagon/serverless-package-external#readme",
+  "dependencies": {
+    "rimraf": "^2.6.2",
+    "yesno": "0.0.1"
+  }
+}
