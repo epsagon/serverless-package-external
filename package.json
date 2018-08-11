@@ -1,6 +1,6 @@
 {
   "name": "serverless-package-external",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add external folders to the deploy package",
   "main": "index.js",
   "repository": {
