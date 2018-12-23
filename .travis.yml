@@ -1,0 +1,19 @@
+language: node_js
+
+branches:
+  only:
+    - master
+
+node_js:
+  - "8.10"
+
+jobs:
+  include:
+    - stage: build-and-deploy
+      script:
+        - npm run build && npm run semantic-release
+
+stages:
+  - name: build-and-deploy
+    if: branch = master AND type = push
+

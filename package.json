@@ -9,6 +9,10 @@
   },
   "author": "Epsagon",
   "license": "MIT",
+  "scripts": {
+    "build": "NODE_ENV=production rollup -c",
+    "semantic-release": "semantic-release"
+  },
   "bugs": {
     "url": "https://github.com/epsagon/serverless-package-external/issues"
   },
@@ -25,5 +29,11 @@
     "external code",
     "common code",
     "lambda python"
-  ]
+  ],
+  "devDependencies": {
+    "rollup": "^0.68.1",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-terser": "^3.0.0",
+    "semantic-release": "^15.13.1"
+  }
 }

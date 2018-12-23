@@ -15,7 +15,9 @@ class PackageExternal {
 
     this.hooks = {
       'before:package:createDeploymentArtifacts': this.beforeDeploy.bind(this),
-      'after:deploy:deploy': this.afterDeploy.bind(this)
+      'before:deploy:function:packageFunction': this.beforeDeploy.bind(this),
+      'after:deploy:function:packageFunction': this.afterDeploy.bind(this),
+      'after:package:createDeploymentArtifacts': this.afterDeploy.bind(this),
     };
 
     this.handleExit();
