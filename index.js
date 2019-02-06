@@ -18,6 +18,8 @@ class PackageExternal {
       'before:deploy:function:packageFunction': this.beforeDeploy.bind(this),
       'after:deploy:function:packageFunction': this.afterDeploy.bind(this),
       'after:package:createDeploymentArtifacts': this.afterDeploy.bind(this),
+      "before:offline:start:init": this.beforeDeploy.bind(this),
+      "before:offline:start:end": this.afterDeploy.bind(this)
     };
 
     this.handleExit();
