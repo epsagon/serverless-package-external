@@ -8,6 +8,7 @@
 > Deploy a Serverless Python Function services with external code
 
 Before deploying, this plugin symlinks folders containing shared code into the root directory of your Serverless function.
+This plugin works also with `serverless-offline` plugin.
 
 ### Installation
 
