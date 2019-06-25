@@ -34,6 +34,6 @@
     "rollup": "^0.68.1",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-terser": "^3.0.0",
-    "semantic-release": "^15.13.1"
+    "semantic-release": "^15.13.16"
   }
 }
