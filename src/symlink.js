@@ -42,7 +42,12 @@ const createFolder = (folder, serverless) => {
       // There is either no conflict or the user has accepted overwriting
       serverless.cli.log(`[serverless-package-external] Symlinking ${folder}`);
       rimraf.sync(target);
-      fs.symlinkSync(folder, target);
+      if (process.platform !== "win32") {
+        fs.symlinkSync(folder, target);
+      } else {
+        // Junction should be created so that no administrator privileges will be required
+        fs.symlinkSync(folder, target, 'junction');
+      }
     });
 };
 
