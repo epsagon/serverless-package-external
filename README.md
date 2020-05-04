@@ -53,7 +53,7 @@ In handler.py, external code can be imported:
 ```py
 from common.resource import shared_resource
 ```
-
+ 
 #### Licensing
 
 serverless-package-external is licensed under the [MIT License](./LICENSE.txt).
