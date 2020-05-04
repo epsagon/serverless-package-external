@@ -57,5 +57,5 @@ from common.resource import shared_resource
 #### Licensing
 
 serverless-package-external is licensed under the [MIT License](./LICENSE.txt).
- 
+
 It is originally based on [serverless-package-common](https://github.com/onlicar/serverless-package-common).
