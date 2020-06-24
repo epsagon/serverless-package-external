@@ -13,6 +13,19 @@ class PackageExternal {
 
     this.symlinked = false;
 
+    this.commands = {
+      packageExternal: {
+        usage: 'create external package symlinks',
+        lifecycleEvents: ['run'],
+        commands: {
+          run: {
+            usage: 'remove symlinks',
+            lifecycleEvents: ['init'],
+          },
+        },
+      },
+    };
+
     this.hooks = {
       'before:package:createDeploymentArtifacts': this.beforeDeploy.bind(this),
       'before:deploy:function:packageFunction': this.beforeDeploy.bind(this),
@@ -21,7 +34,8 @@ class PackageExternal {
       "before:offline:start:init": this.beforeDeploy.bind(this),
       "before:offline:start:end": this.afterDeploy.bind(this),
       "invoke:local:loadEnvVars": this.beforeDeploy.bind(this),
-      "invoke:local:invoke": this.afterDeploy.bind(this)
+      "invoke:local:invoke": this.afterDeploy.bind(this),
+      "packageExternal:run:init": this.beforeDeploy.bind(this),
     };
 
     this.handleExit();
@@ -40,6 +54,7 @@ class PackageExternal {
 
   afterDeploy() {
     if(this.symlinked) {
+      this.serverless.cli.log(`[serverless-package-external] cleaning up`);
       this.options.external.forEach(externalFolder => {
         const target = path.basename(externalFolder);
         symlink.removeFolder(target);
