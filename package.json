@@ -33,7 +33,7 @@
   "devDependencies": {
     "rollup": "^0.68.1",
     "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-terser": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2",
     "semantic-release": "^17.0.2"
   }
 }
