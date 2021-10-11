@@ -32,6 +32,7 @@ class PackageExternal {
       'after:deploy:function:packageFunction': this.afterDeploy.bind(this),
       'after:package:createDeploymentArtifacts': this.afterDeploy.bind(this),
       "before:offline:start:init": this.beforeDeploy.bind(this),
+      "before:offline:start": this.beforeDeploy.bind(this),
       "before:offline:start:end": this.afterDeploy.bind(this),
       "invoke:local:loadEnvVars": this.beforeDeploy.bind(this),
       "invoke:local:invoke": this.afterDeploy.bind(this),
