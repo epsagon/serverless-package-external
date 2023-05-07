@@ -36,13 +36,13 @@ custom:
     common_utils:
       # Optional command to run on the dir you're symlinking
       cmd: pip install -r requirements.txt -t .
-      source: './common_utils'
+      source: '../common_utils'
       # if no functions specified, it will apply it to all
       functions:
         - service-a
         - service-b
     api_utils:
-      source: './api_utils'
+      source: '../api_utils'
       functions:
         - service-b
 ```
@@ -54,11 +54,12 @@ custom:
     └── resource.py
 └── api_utils
     └── resource.py
-└── service-a
-    └── handler.py
-└── service-b
-    └── handler.py
-serverless.yml
+└── functions
+  └── service-a
+      └── handler.py
+  └── service-b
+      └── handler.py
+  serverless.yml
 ```
 
 In service-b/handler.py, external code can be imported:
