@@ -1,74 +1,62 @@
 'use strict';
 
-const symlink = require('./src/symlink');
-const path = require('path');
-
+const fs = require('fs')
+const path = require('path')
 
 class PackageExternal {
-  constructor(serverless, options) {
-    this.serverless = serverless;
-    this.options = Object.assign({
-      external: []
-    }, this.serverless.service.custom && this.serverless.service.custom.packageExternal || {});
-
-    this.symlinked = false;
-
-    this.commands = {
-      packageExternal: {
-        usage: 'create external package symlinks',
-        lifecycleEvents: ['run'],
-        commands: {
-          run: {
-            usage: 'remove symlinks',
-            lifecycleEvents: ['init'],
-          },
-        },
-      },
-    };
-
+  constructor(serverless) {
+    this.serverless = serverless
+    this.options = this.serverless.service?.custom?.packageExternal || {}
     this.hooks = {
-      'before:package:createDeploymentArtifacts': this.beforeDeploy.bind(this),
-      'before:deploy:function:packageFunction': this.beforeDeploy.bind(this),
-      'after:deploy:function:packageFunction': this.afterDeploy.bind(this),
-      'after:package:createDeploymentArtifacts': this.afterDeploy.bind(this),
-      "before:offline:start:init": this.beforeDeploy.bind(this),
-      "before:offline:start": this.beforeDeploy.bind(this),
-      "before:offline:start:end": this.afterDeploy.bind(this),
-      "invoke:local:loadEnvVars": this.beforeDeploy.bind(this),
-      "invoke:local:invoke": this.afterDeploy.bind(this),
-      "packageExternal:run:init": this.beforeDeploy.bind(this),
-    };
-
-    this.handleExit();
+      'before:package:initialize': this.beforePackage.bind(this),
+      'after:package:finalize': this.afterPackage.bind(this)
+    }
+    this.handleExit(['SIGINT', 'SIGTERM', 'SIGQUIT'])
   }
 
-  beforeDeploy() {
-    // Symlink external folders
-    return Promise.all(this.options.external.map(externalFolder => {
-        this.symlinked = true;
-        return symlink.createFolder(externalFolder, this.serverless);
-      }))
-      .then(() => {
-        this.serverless.cli.log(`[serverless-package-external] is complete`);
-      });
-  }
+  applyAction(callback) {
+    const slsFns = this.serverless.service?.functions || {}
+    const images = this.serverless.service?.provider?.ecr?.images || {}
 
-  afterDeploy() {
-    if(this.symlinked) {
-      this.serverless.cli.log(`[serverless-package-external] cleaning up`);
-      this.options.external.forEach(externalFolder => {
-        const target = path.basename(externalFolder);
-        symlink.removeFolder(target);
-      });
+    for (const [externalFolder, { functions, source }] of Object.entries(this.options)) {
+      for (const name of functions || Object.keys(slsFns)) {
+        const slsFn = slsFns[name]
+        const imagePath = images?.[slsFn?.image?.name]?.path || slsFn?.image?.path
+        const target = path.join(process.cwd(), imagePath || slsFn?.module || '', externalFolder)
+        callback({ name, externalFolder, source, target, log: this.serverless.cli.log })
+      }
     }
   }
 
-  handleExit(func) {
-    ['SIGINT', 'SIGTERM', 'SIGQUIT']
-      .forEach(signal => process.on(signal, () => {
-        this.afterDeploy();
-      }));
+  beforePackage() {
+    // Symlink external folders
+    this.applyAction(({ name, externalFolder, source, target, log }) => {
+      const noSource = !fs.existsSync(source)
+      if (fs.existsSync(target) || noSource) {
+        const issue = noSource ? `${source} does not exist` : `${target} already exists`
+        log(`[serverless-package-external] cannot Symlink function: ${name}, ${issue}`)
+      } else {
+        // Junction is used on windows so that no administrator privileges are required
+        fs.symlinkSync(path.join(process.cwd(), source), target, process.platform === 'win32' && 'junction')
+        log(`[serverless-package-external] Symlinked "${externalFolder}" for function: ${name}`)
+      }
+    })
+  }
+
+  afterPackage() {
+    // Cleanup generated symlinks
+    this.applyAction(({ name, externalFolder, target, log }) => {
+      if (fs.existsSync(target) && fs.rmSync(target, { recursive: true, force: true })) {
+        log(`[serverless-package-external] Cleanup "${externalFolder}" for function: ${name}`)
+      }
+    })
+  }
+
+  handleExit(signals) {
+    for (const signal of signals) {
+      process.on(signal, () => this.afterPackage())
+    }
   }
 }
 
-module.exports = PackageExternal;
+module.exports = PackageExternal

@@ -1,26 +1,18 @@
 {
   "name": "serverless-package-external",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Add external folders to the deploy package",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/epsagon/serverless-package-external.git"
   },
-  "author": "Epsagon",
+  "author": "Epsagon & adminy",
   "license": "MIT",
-  "scripts": {
-    "build": "NODE_ENV=production rollup -c",
-    "semantic-release": "semantic-release"
-  },
   "bugs": {
     "url": "https://github.com/epsagon/serverless-package-external/issues"
   },
   "homepage": "https://github.com/epsagon/serverless-package-external#readme",
-  "dependencies": {
-    "rimraf": "^2.6.2",
-    "yesno": "0.0.1"
-  },
   "keywords": [
     "serverless",
     "aws lambda",
@@ -31,9 +23,6 @@
     "lambda python"
   ],
   "devDependencies": {
-    "rollup": "^0.68.1",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "semantic-release": "^17.0.2"
+    "semantic-release": "^21.0.2"
   }
 }

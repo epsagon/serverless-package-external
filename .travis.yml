@@ -5,13 +5,13 @@ branches:
     - master
 
 node_js:
-  - "10.18"
+  - 19
 
 jobs:
   include:
     - stage: build-and-deploy
       script:
-        - npm run build && npm run semantic-release
+        - npx semantic-release
 
 stages:
   - name: build-and-deploy
