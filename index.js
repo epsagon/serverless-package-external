@@ -20,7 +20,7 @@ class PackageExternal {
     const images = this.serverless.service?.provider?.ecr?.images || {}
 
     for (const [externalFolder, { functions, source, cmd }] of Object.entries(this.options)) {
-      cmd && source && fs.existsSync(source) && cp.execSync(cmd, { cwd: source })
+      cmd && source && fs.existsSync(source) && cp.execSync(cmd, { cwd: source, env: process.env })
       for (const name of functions || Object.keys(slsFns)) {
         const slsFn = slsFns[name]
         const imagePath = images?.[slsFn?.image?.name]?.path || slsFn?.image?.path
