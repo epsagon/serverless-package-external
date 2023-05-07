@@ -34,6 +34,8 @@ functions:
 custom:
   packageExternal:
     common_utils:
+      # Optional command to run on the dir you're symlinking
+      cmd: pip install -r requirements.txt -t .
       source: './common_utils'
       # if no functions specified, it will apply it to all
       functions:

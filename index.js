@@ -2,6 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const cp = require('child_process')
 
 class PackageExternal {
   constructor(serverless) {
@@ -18,7 +19,8 @@ class PackageExternal {
     const slsFns = this.serverless.service?.functions || {}
     const images = this.serverless.service?.provider?.ecr?.images || {}
 
-    for (const [externalFolder, { functions, source }] of Object.entries(this.options)) {
+    for (const [externalFolder, { functions, source, cmd }] of Object.entries(this.options)) {
+      cmd && source && fs.existsSync(source) && cp.execSync(cmd, { cwd: source })
       for (const name of functions || Object.keys(slsFns)) {
         const slsFn = slsFns[name]
         const imagePath = images?.[slsFn?.image?.name]?.path || slsFn?.image?.path
