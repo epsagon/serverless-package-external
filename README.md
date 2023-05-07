@@ -24,34 +24,48 @@ service: service-name
 plugins:
   - serverless-package-external
 
+ecr:
+  images:
+    # Your images here
+
 functions:
   # Your functions here
 
 custom:
   packageExternal:
-    external:
-      - '../common'
-      - '../service-a/module'
+    common_utils:
+      # Optional command to run on the dir you're symlinking
+      cmd: pip install -r requirements.txt -t .
+      source: '../common_utils'
+      # if no functions specified, it will apply it to all
+      functions:
+        - service-a
+        - service-b
+    api_utils:
+      source: '../api_utils'
+      functions:
+        - service-b
 ```
 
 #### Example Directory Structure
 
 ```
-└── common
+└── common_utils
     └── resource.py
-└── service-a
-    └── handler.py
-    └── serverless.yml
-    └── module
-        └── main.py
-└── service-b
-    └── handler.py
-    └── serverless.yml
+└── api_utils
+    └── resource.py
+└── functions
+  └── service-a
+      └── handler.py
+  └── service-b
+      └── handler.py
+  serverless.yml
 ```
 
-In handler.py, external code can be imported:
+In service-b/handler.py, external code can be imported:
 ```py
-from common.resource import shared_resource
+from common_utils.resource import shared_resource
+from api_utils.resource import shared_resource
 ```
  
 #### Licensing
