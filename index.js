@@ -46,7 +46,8 @@ class PackageExternal {
     // Symlink external folders
     return Promise.all(this.options.external.map(externalFolder => {
         this.symlinked = true;
-        return symlink.createFolder(externalFolder, this.serverless);
+        const folderWithoutAstrix = externalFolder.split('*').join('');
+        return symlink.createFolder(folderWithoutAstrix, this.serverless);
       }))
       .then(() => {
         this.serverless.cli.log(`[serverless-package-external] is complete`);
@@ -57,7 +58,8 @@ class PackageExternal {
     if(this.symlinked) {
       this.serverless.cli.log(`[serverless-package-external] cleaning up`);
       this.options.external.forEach(externalFolder => {
-        const target = path.basename(externalFolder);
+        const folderWithoutAstrix = externalFolder.split('*').join('');
+        const target = path.basename(folderWithoutAstrix);
         symlink.removeFolder(target);
       });
     }
